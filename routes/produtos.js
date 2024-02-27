@@ -9,8 +9,13 @@ route.get("/", (request, response, next) => {
 });
 
 route.post("/", (request, response, next) => {
+    const produto = {
+        nome: request.body.nome,
+        preco: request.body.preco
+    }
     response.status(201).send({
-        mensagem: "post de produto feito com sucesso"
+        mensagem: "post de produto feito com sucesso",
+        produtoCriado: produto
     });
 });
 
