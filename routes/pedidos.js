@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express();
-
+const postgres = require("../postgresql")
 
 route.get("/", (request, response, next) => {
     response.status(200).send({
@@ -9,14 +9,23 @@ route.get("/", (request, response, next) => {
 });
 
 route.post("/", (request, response, next) => {
-    const pedido = {
-        idProduto: request.body.idProduto,
-        quantidade: request.body.quantidade
-    }
-    response.status(201).send({
-        mensagem: "post de pedidos feito com sucesso",
-        pedidoCriado: pedido
-    });
+    postgres.query(
+        'INSERT INTO pedido(quantidade, fk_produto) VALUES ($1, $2);',
+        [request.body.quantidade, request.body.fk_produto],
+        (error, result, field) => {
+            if (error) {
+                console.log("vou mostrar um erro")
+                return response.status(500).send({
+                    error: error.message,
+                    response: null
+                })
+            }
+            response.status(201).send({
+                mensagem: "Pedido inserido com sucesso",
+               // id_pedido: result.rows[0].id
+            });
+        }
+    );
 });
 
 

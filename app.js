@@ -29,8 +29,8 @@ app.use((request, response, next) => {
 app.use('/produto', routaProduto);
 app.use('/pedido', routaPedidos);
 
-
 app.use((request, response, next) => {
+    console.log("Entrei em Rota não encontrada")
     const erro = new Error("Rota não encontrada");
     erro.status = 404;
     next(erro);
@@ -38,13 +38,13 @@ app.use((request, response, next) => {
 
 
 app.use((error, request, response, next) => {
+    console.log("Entrei em ", error.message);
     response.status(error.status || 500);
     return response.send({
         erro: {
-            "mensagem": error.mensagem
+            mensagem: error.message // Acessa a mensagem de erro usando error.message
         }
-    })
+    });
 });
-
 
 module.exports = app;
